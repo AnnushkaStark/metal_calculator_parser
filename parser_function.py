@@ -1,4 +1,5 @@
-import csv
+import csv                                            #Много много импортоффф
+import pandas as pd
 from selenium import webdriver
 from selenium.webdriver import Chrome,ChromeService
 from selenium.webdriver.chrome.service import Service
@@ -6,31 +7,33 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 import time
 import random
+import  openpyxl
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import Select
-from openpyxl import Workbook
+from openpyxl import Workbook,cell,writer , worksheet
 from selenium.webdriver.common.action_chains import ActionChains
 
 
 def parsing():
     '''Функция парсит данные с сайта используя файл csv и сохряняет их в список'''
-    browser = webdriver.Chrome(service= ChromeService(ChromeDriverManager().install()))
+    browser = webdriver.Chrome(service= ChromeService(ChromeDriverManager().install())) #Устанавливаем браузер
     try:
         my_result = []
-        browser.get('https://metal-calculator.ru/page/app')
-        name = browser.find_element(by=By.XPATH, value='//*[@id="app"]/div/div[2]/div/div[1]/div/div[1]/div[2]/nav/ul/li[3]/a')
+        browser.get('https://metal-calculator.ru/page/app') #Переходим на сайт
+        name = browser.find_element(by=By.XPATH, value='//*[@id="app"]/div/div[2]/div/div[1]/div/div[1]/div[2]/nav/ul/li[3]/a') #Находим название аллюминий
         name.click()
-        forma = browser.find_element(by=By.XPATH, value= '//*[@id="app"]/div/div[2]/div/div[1]/div/div[2]/div[2]/nav/ul/li[4]/a')
+        forma = browser.find_element(by=By.XPATH, value= '//*[@id="app"]/div/div[2]/div/div[1]/div/div[2]/div[2]/nav/ul/li[4]/a') #Находим тип лист\плита
         forma.click()
-        calculator = browser.find_element(by=By.XPATH, value= '//*[@id="app"]/div/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div/form/div')
-        with open('tz (1).csv', 'r', encoding='cp1251') as file:
+        calculator = browser.find_element(by=By.XPATH, value= '//*[@id="app"]/div/div[2]/div/div[2]/div/div/div/div[2]/div[2]/div/form/div') #Находиим сам калькулятор
+        with open('tz (1).csv', 'r', encoding='cp1251') as file: # Открываем файл csv
             reader = csv.reader(file, delimiter=';')
-            for  row in reader:
-                marka = row[4]
-                tolschina = row[5]
-                width = row[6]
-                heught = row[7]
-                result = row[8]
+            for  row in reader: #Находим столбцы (индексы) с которыми будем работать дальше
+                marka = row[4]       #Марка
+                tolschina = row[5]   #Толщина
+                width = row[6]        #Ширина
+                heught = row[7]       #Длина
+                result = row[8]       # Вес - пока он у нас пустой т.е ''
+                # Находим выпадающий список
                 selects = calculator.find_element(by = By.CSS_SELECTOR,value='#app > div > div.app-content-wrap > div > div.unit-70.app-content.section.section-details.non-border > div > div > div > div.units-row.units-split.details-container > div.unit-40 > div > form > div > div:nth-child(1) > label > select')
                 selects.click()
                 select = Select(selects)
@@ -62,19 +65,11 @@ def parsing():
                     if row[8] == '':
                         row[8] = result.text
                         my_result.append(row)
-                       
-            with open('my.xlsx','a') as file:
-                for row in my_result:
-                    file.writelines(row)
-           
-            
 
-                
-                
-           
-     
-            
-    except Exception:
+        df = pd.DataFrame(my_result,columns= ['Наименование','Код  артикул','Металл','Сорамент','Марка','Толщина','Ширина','Длина','Вес'])
+        df.to_excel('new_1.xlsx',index = False)
+                                  
+    except TypeError:
         print('error')
 
 parsing()
