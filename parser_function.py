@@ -35,9 +35,13 @@ def parsing():
                 result = row[8]       # Вес - пока он у нас пустой т.е ''
                 # Находим выпадающий список
                 selects = calculator.find_element(by = By.CSS_SELECTOR,value='#app > div > div.app-content-wrap > div > div.unit-70.app-content.section.section-details.non-border > div > div > div > div.units-row.units-split.details-container > div.unit-40 > div > form > div > div:nth-child(1) > label > select')
+                # Жмякаем на него чтобы выпал
                 selects.click()
+                # Видим все что есть в выпадающем списке
                 select = Select(selects)
+                # Находим инпут толщина
                 tolschina_input = calculator.find_element(by=By.CSS_SELECTOR,value='#app > div > div.app-content-wrap > div > div.unit-70.app-content.section.section-details.non-border > div > div > div > div.units-row.units-split.details-container > div.unit-40 > div > form > div > div:nth-child(2) > label > input')
+                # На всякий случай очищаем потому что фиг знает что там может быть
                 tolschina_input.clear()
                 tolschina_input.send_keys(row[5])
                 width_input = calculator.find_element(by=By.CSS_SELECTOR,value = '#app > div > div.app-content-wrap > div > div.unit-70.app-content.section.section-details.non-border > div > div > div > div.units-row.units-split.details-container > div.unit-40 > div > form > div > div:nth-child(3) > label > input')
@@ -72,5 +76,5 @@ def parsing():
     except TypeError:
         print('error')
 
-parsing()
+#parsing()
 

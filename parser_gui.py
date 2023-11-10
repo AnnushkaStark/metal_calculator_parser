@@ -25,13 +25,16 @@ class Parser(Ui_MainWindow,QMainWindow):
         super().__init__()
         self.setupUi(self)
         self.show()
-        self.pushButton_start.clicked.connect(self.start_parsing)
-        self.textEdit.insertPlainText('')
+        self.pushButton.clicked.connect(self.start_parsing)
+        
      
 
     def start_parsing(self):
-        return  parsing()
-            
+        parsing()
+        result = QMessageBox()
+        result.setText('The end')
+        result.exec()
+      
         
 
 app = QApplication(sys.argv)
